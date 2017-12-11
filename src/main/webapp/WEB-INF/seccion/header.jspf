@@ -10,5 +10,74 @@
         <script src="webjars/jquery/1.11.1/jquery.min.js"></script>
         <title>JSP Page</title>
     </head>
+    <style>
+        @import url(https://fonts.googleapis.com/css?family=Roboto:300);
+
+        .treemenu [level]{
+            transition: max-height 0.3s ease-out;
+            overflow: hidden;
+        }
+
+        .treemenu [level].closed {
+            max-height: 0;
+        }
+
+        .treemenu [level].opened {
+            max-height: 50px;
+        }
+
+        .treemenu [level="1"] .lbl{
+            padding-left: 50px;
+        }
+
+        .treemenu [level="2"] .lbl{
+            padding-left: 100px;
+        }
+
+        /* basic non-functional styling passed this poing */
+        *{
+            box-sizing: border-box;
+            padding: 0;
+            margin: 0;
+        }
+
+        body{
+            background-color: #1E90FF;
+            font-family: 'Roboto', sans-serif;
+            font-weight: 300;
+        }
+
+        .treemenu {
+            width: 220px;
+            margin: auto;
+        }
+
+        .treemenu > [level] {
+            background-color: #212121;
+            cursor: pointer;
+        }
+
+        .treemenu > [level].opened {
+            margin: 1px;
+        }
+
+        .treemenu > [level]:hover {
+            background-color: #A9A9A9;
+        }
+
+        .treemenu .lbl {
+            color: white;
+            padding: 15px;
+            display: inline-block;
+        }
+
+        .title{
+            text-align: center;
+            font-size: 20px;
+            margin: 10px;
+            color: white;
+
+        }
+    </style>
     <body background="../images/bluepaper.jpg">
-  
+

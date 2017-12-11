@@ -54,7 +54,7 @@ public class Controlador extends HttpServlet {
 
         Controlador.fabrica = DAOFactory.getFactory(TipoBD.MYSQL,
                 this.getServletContext());
-        
+
         proyectoDao = fabrica.getProyectoDao();
         paqueteDao = fabrica.getPaqueteDao();
         archivoDao = fabrica.getArchivoDao();
@@ -69,34 +69,31 @@ public class Controlador extends HttpServlet {
 
         String destino = "/WEB-INF/vistas/";
 
-        if (ruta.equals("/Ingresar")) {
-            destino += "login.jsp";
+        if (ruta.equals("/Ingresar")) { 
+            RequestDispatcher rd = request.getRequestDispatcher(destino+"login.jsp");
+            rd.forward(request, response);
+        
         }
         if (ruta.equals("/Logearse")) {
-            isLoged = validarUsuario(request, session);
-            if (isLoged) {
-                destino = "ProyectosListar";
-            } else {
-                request.setAttribute("login", "error");
-                destino += "login.jsp";
-            }
+            validarUsuario(request, response, session);
         }
 
         if (ruta.equals("/ProyectosListar")) {
-            System.out.println("hola "+usuario.getIdUsuario());
+            System.out.println("hola " + usuario.getIdUsuario());
             listarDocumentos(usuario);
             request.setAttribute("usuario", usuario);
             request.setAttribute("proyectos", usuario.getProyectos());
-            destino += "mostrar_proyectos.jsp";
+            RequestDispatcher rd = request.getRequestDispatcher(destino+"mostrar_proyectos.jsp");
+            rd.forward(request, response);
         }
 
         if (ruta.equals("/CerrarSession")) {
             cerrarSession(session);
-            destino += "login.jsp";
+            RequestDispatcher rd = request.getRequestDispatcher( destino += "login.jsp");
+            rd.forward(request, response);
         }
 
-        RequestDispatcher rd = request.getRequestDispatcher(destino);
-        rd.forward(request, response);
+        
 
     }
 
@@ -139,8 +136,8 @@ public class Controlador extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
-    private boolean validarUsuario(HttpServletRequest request, HttpSession session)
-            throws ServletException, IOException {
+    private void validarUsuario(HttpServletRequest request, HttpServletResponse response, HttpSession session) throws ServletException, IOException {
+        RequestDispatcher dispatcher;
 
         String idUsuario = request.getParameter("user");
         String pass = request.getParameter("passwd");
@@ -151,14 +148,16 @@ public class Controlador extends HttpServlet {
         if (usuario != null) {
             session = request.getSession();
             session.setAttribute("usuario", usuario);
-            return true;
+            isLoged = true;
+            response.sendRedirect("ProyectosListar");
         } else {
-            return false;
+            request.setAttribute("login", "error");
+            dispatcher = request.getRequestDispatcher("/WEB-INF/vistas/login.jsp");
+            dispatcher.forward(request, response);
         }
     }
-
+    
     private void cerrarSession(HttpSession session) throws ServletException, IOException {
-
         if (session.getAttribute("usuario") != null) {
             session.invalidate();
             isLoged = false;
@@ -168,6 +167,7 @@ public class Controlador extends HttpServlet {
     /**
      *
      * seccion de dao
+     *
      * @param usuario
      */
     public void listarDocumentos(Usuario usuario) {
