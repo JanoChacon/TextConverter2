@@ -9,13 +9,13 @@
         <div class="navbar-header">
             <a class="navbar-brand" href="#">Bienvenido ${usuario.idUsuario}</a>   
         </div>
-        <!--<ul class="nav navbar-nav">
-                    <li><a type="button" class="btn" data-toggle="modal" data-target="#ModalcrearProyecto">Crear Proyecto</a></li>
-            </ul>-->
+<!--        <ul class="nav navbar-nav">
+            <li><a id ="idActiva" name="idActiva" type="button" class="btn">Crear Proyecto</a></li>
+        </ul>-->
 
         <ul class="nav navbar-nav navbar-right">
-            <li><a href="CerrarSession" type="button" class="btn">
-                    <span class="glyphicon glyphicon-log-out"></span> Cerrar session</a>
+            <li><a name="rutaProyecto" type="button" class="btn">
+                    <span class="glyphicon glyphicon-log-out"></span>Cerrar session</a>
             </li>
         </ul>
     </div>
@@ -60,14 +60,23 @@
         <div class="col-sm-2">
             <div class="treemenu">
                 <c:forEach items="${proyectos}" var="proyecto">
-                    <div level="0"> <span class="lbl ">${proyecto.nombre}</span></div>
-                        <c:forEach items="${proyecto.paquetes}" var="paquete">
-                        <div level="1"> <span class="lbl">${paquete.nombre}</span></div>
-                            <c:forEach items="${paquete.archivos}" var="archivo">
-                            <div level="2"> <span class="lbl">${archivo.nombre}</span></div>
-                            </c:forEach>
+                    <div level="0" value="${proyecto.id}"> 
+                        <a id ="linkProyecto${proyecto.id}">
+                        <span class="lbl">${proyecto.nombre}</span></a>
+                    </div>
+                    <c:forEach items="${proyecto.paquetes}" var="paquete">
+                        <div level="1" value="${paquete.id}"> 
+                            <a id ="linkPaquete${paquete.id}">
+                            <span class="lbl">${paquete.nombre}</span></a>
+                        </div>
+                        <c:forEach items="${paquete.archivos}" var="archivo">
+                            <div level="2" value="${archivo.id}"> 
+                                <a id ="linkArchivo${archivo.id}">
+                                <span class="lbl">${archivo.nombre}</span></a>
+                            </div>
                         </c:forEach>
-                    </c:forEach>  
+                    </c:forEach>
+                </c:forEach>  
             </div>
         </div>
         <!-- cuerpo -->
@@ -100,11 +109,12 @@
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                 <h4 class="modal-title">Crear proyecto</h4>
             </div>
-            <form name="Form" action="CrearProyecto" method="POST">
+            <form name="FormCrearProyecto" action="CrearProyecto" method="POST">
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="nombreProyecto">Nombre del nuevo proyecto:</label>
                         <input type="text" class="form-control" placeholder="nombre" name="nombreProyecto">
+                        <input name = "idProyecto" id="projID1"/>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -129,7 +139,7 @@
             <div class="alert alert-danger">
                 Esta accion tambien borrara los subcontenidos.
             </div>
-            <form name="Form" action="CrearProyecto" method="POST">
+            <form name="FormBorrarProyecto" action="BorrarProyecto" method="POST">
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="nombreProyecto">Esta seguro de borrar el Proyecto:</label>
@@ -168,6 +178,7 @@
                     this.hideItem($item);
                 } else {
                     this.showItem($item);
+
                 }
             }.bind(this))
         }
@@ -176,10 +187,20 @@
             var $el = $(evt.currentTarget);
 
             if (this.isOpen($el)) {
+
                 this.closeItem($el);
             } else {
                 this.openItem($el);
             }
+            
+            if (parseInt($el.attr("level")) == 0) {
+                document.FormCrearProyecto.idProyecto.value = $el.attr("value");
+            }else if (parseInt($el.attr("level")) == 1) {
+                document.FormCrearProyecto.idProyecto.value = $el.attr("value");
+            }else if (parseInt($el.attr("level")) == 2) {
+                document.FormCrearProyecto.idProyecto.value = $el.attr("value");
+            }
+
         }
 
         getElementTreeMenuId($el) {
