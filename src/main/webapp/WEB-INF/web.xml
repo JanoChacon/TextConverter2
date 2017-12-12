@@ -26,6 +26,7 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>Controlador</servlet-name>
+        <url-pattern>/CrearProyecto</url-pattern>
         <url-pattern>/Ingresar</url-pattern>
         <url-pattern>/CerrarSession</url-pattern>
         <url-pattern>/ProyectosListar</url-pattern>

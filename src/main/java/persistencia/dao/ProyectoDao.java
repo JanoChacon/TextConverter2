@@ -25,10 +25,10 @@ public interface ProyectoDao {
      * @param proyecto
      * @return 
      */
-    public boolean guardar(Proyecto mesa);
+    public boolean guardar(Proyecto pro, String idUsuario);
     
     /**
-     * Elimina un proyecto a traves de su id
+     * Guarda un proyecto a traves de la id de usuario
      * @param id
      * @return 
      */

@@ -29,7 +29,7 @@ public class ProyectoImpl implements ProyectoDao {
      */
     private static final String SQL_SELECT = "select * from proyecto";
 
-    private static final String SQL_INSERT = "insert into proyecto(nombre) values (?)";
+    private static final String SQL_INSERT = "insert into proyecto(nombre, id_usuario) values (?,?)";
 
     private static final String SQL_DELETE = "delete from proyecto where id_proyecto = ?";
 
@@ -74,13 +74,14 @@ public class ProyectoImpl implements ProyectoDao {
     }
 
     @Override
-    public boolean guardar(Proyecto pro) {
+    public boolean guardar(Proyecto pro, String idUsuario) {
 
         boolean resultado = false;
 
         try {
             PreparedStatement pstm = this.conn.prepareStatement(SQL_INSERT);          
             pstm.setString(1, pro.getNombre());
+            pstm.setString(2, idUsuario);
             pstm.executeUpdate();
             resultado = true;
 

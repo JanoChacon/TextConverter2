@@ -86,6 +86,10 @@ public class Controlador extends HttpServlet {
             RequestDispatcher rd = request.getRequestDispatcher(destino+"mostrar_proyectos.jsp");
             rd.forward(request, response);
         }
+        
+        if (ruta.equals("/CrearProyecto")) {
+            crearProyecto(request, response);
+        }
 
         if (ruta.equals("/CerrarSession")) {
             cerrarSession(session);
@@ -180,4 +184,20 @@ public class Controlador extends HttpServlet {
         }
         usuario.setProyectos(proyectos);
     }
+    
+    public void crearProyecto(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+        ProyectoDao proyectoDao = this.fabrica.getProyectoDao();
+        Proyecto pro = new Proyecto();
+        pro.setNombre(request.getParameter("nombreProyecto"));
+        proyectos.add(pro);
+        if (proyectoDao.guardar(pro, usuario.getIdUsuario())) {
+            System.out.println("asdasdas");
+            request.setAttribute("creadoValido", "valido");
+        } else {
+            request.setAttribute("creadoValido", "invalido");
+        }
+        response.sendRedirect("ProyectosListar");
+        
+    }
+    
 }

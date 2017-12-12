@@ -3,13 +3,16 @@
     Created on : 06-12-2017, 2:16:34
     Author     : Alejandro
 --%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!-- la navbar -->
 <nav class="navbar navbar-fixed-top navbar-inverse">
     <div class="container-fluid">
         <div class="navbar-header">
-            <a class="navbar-brand" href="#">TextConverter: ${usuario.idUsuario}</a>
+            <a class="navbar-brand" href="#">Bienvenido ${usuario.idUsuario}</a>   
         </div>
+        <!--<ul class="nav navbar-nav">
+                    <li><a type="button" class="btn" data-toggle="modal" data-target="#ModalcrearProyecto">Crear Proyecto</a></li>
+            </ul>-->
+
         <ul class="nav navbar-nav navbar-right">
             <li><a href="CerrarSession" type="button" class="btn">
                     <span class="glyphicon glyphicon-log-out"></span> Cerrar session</a>
@@ -18,6 +21,38 @@
     </div>
 </nav>
 <br><br><br><br>
+<div class="container-fluid">
+    <div class="row">
+        <div class="btn-group col-sm-9">
+            <div class="btn-group">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    Opciones Proyecto <span class="caret"></span></button>
+                <ul class="dropdown-menu" role="menu">
+                    <li><a class="btn" data-toggle="modal" data-target="#ModalcrearProyecto">Crear Proyecto</a></li>
+                    <li><a class="btn" data-toggle="modal" data-target="#ModalborrarProyecto">Borrar Pryecto</a></li>
+                </ul>
+            </div>
+            <div class="btn-group">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    Opciones Paquete <span class="caret"></span></button>
+                <ul class="dropdown-menu" role="menu">
+                    <li><a href="#">Subir Nuevo Archivo</a></li>
+                    <li><a href="#">Borrar Archivo</a></li>
+                </ul>
+            </div>
+            <div class="btn-group">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    Opciones Archivo <span class="caret"></span></button>
+                <ul class="dropdown-menu" role="menu">
+                    <li><a href="#">Subir Nuevo Archivo</a></li>
+                    <li><a href="#">Borrar Archivo</a></li>
+                </ul>
+            </div>
+        </div>
+    </div> 
+</div>
+</div><br>
+
 
 <div class="container-fluid">
     <div class="row">
@@ -26,13 +61,13 @@
             <div class="treemenu">
                 <c:forEach items="${proyectos}" var="proyecto">
                     <div level="0"> <span class="lbl ">${proyecto.nombre}</span></div>
-                    <c:forEach items="${proyecto.paquetes}" var="paquete">
+                        <c:forEach items="${proyecto.paquetes}" var="paquete">
                         <div level="1"> <span class="lbl">${paquete.nombre}</span></div>
-                        <c:forEach items="${paquete.archivos}" var="archivo">
+                            <c:forEach items="${paquete.archivos}" var="archivo">
                             <div level="2"> <span class="lbl">${archivo.nombre}</span></div>
+                            </c:forEach>
                         </c:forEach>
-                    </c:forEach>
-                </c:forEach>  
+                    </c:forEach>  
             </div>
         </div>
         <!-- cuerpo -->
@@ -55,8 +90,64 @@
         </div>
     </div>
 </div>
+
+<!-- modal de creacion de proyecto -->
+<div id="ModalcrearProyecto"  class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Crear proyecto</h4>
+            </div>
+            <form name="Form" action="CrearProyecto" method="POST">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="nombreProyecto">Nombre del nuevo proyecto:</label>
+                        <input type="text" class="form-control" placeholder="nombre" name="nombreProyecto">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success" id="btn-enviar">Crear</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                </div>
+            </form>
+        </div>   
+    </div>
+</div>
+
+<!--Modal para borrar Proyecto seleccionado-->
+
+<div id="ModalborrarProyecto"  class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Borrar Proyecto</h4>
+            </div>
+            <div class="alert alert-danger">
+                Esta accion tambien borrara los subcontenidos.
+            </div>
+            <form name="Form" action="CrearProyecto" method="POST">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="nombreProyecto">Esta seguro de borrar el Proyecto:</label>
+                        <input type="text" class="form-control" placeholder="nombre" name="idProyecto" value="asd">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success" id="btn-enviar">Crear</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                </div>
+            </form>
+        </div>   
+    </div>
+</div>
+
 </body>
 
+<!--codigo javascript para navegacion de proyectos -->
 <script type="text/javascript">
     window.log = function (text) {
         console.log(text);
@@ -89,7 +180,6 @@
             } else {
                 this.openItem($el);
             }
-
         }
 
         getElementTreeMenuId($el) {
@@ -170,7 +260,6 @@
             $el.addClass("closed");
         }
     }
-
     var menu = new TreeMenu($(".treemenu"));
 
 </script>

@@ -3,11 +3,6 @@
     Created on : 03-dic-2017, 20:22:13
     Author     : Alejandro
 --%>
-<head>
-    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script> 
-
-
-</head>
 
 <!-- la navbar -->
 <nav class="navbar navbar-fixed-top navbar-inverse">
@@ -62,7 +57,7 @@
     <br>
 </div>
 <!-- modal de login -->
-<div class="modal fade" id="Modalogin" role="dialog">
+<div id="Modalogin"  class="modal fade" role="dialog">
     <div class="modal-dialog">
         <!-- Modal content-->
         <div class="modal-content">
@@ -88,7 +83,6 @@
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
                 </div>
             </form>
-
         </div>   
     </div>
 </div>
@@ -102,7 +96,7 @@
                 <h4 class="modal-title">Como entrar</h4>
             </div>
             <div class="modal-body">
-                <p>Para conseguir una contraseña, consulte con el administrador encargado de su institucion.</p>
+                <p>estamos trabajando para usted</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
