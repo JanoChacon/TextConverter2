@@ -21,6 +21,7 @@ import persistencia.dao.ProyectoDao;
 import persistencia.dao.UsuarioDao;
 import persistencia.factory.DAOFactory;
 import persistencia.factory.TipoBD;
+import textconverter.logic.Paquete;
 import textconverter.logic.Proyecto;
 import textconverter.logic.Usuario;
 
@@ -77,6 +78,10 @@ public class Controlador extends HttpServlet {
         if (ruta.equals("/Logearse")) {
             validarUsuario(request, response, session);
         }
+        
+        if (ruta.equals("/Registrar")) {
+            crearUsuario(request, response, session);
+        }
 
         if (ruta.equals("/ProyectosListar")) {
             System.out.println("hola " + usuario.getIdUsuario());
@@ -89,6 +94,18 @@ public class Controlador extends HttpServlet {
         
         if (ruta.equals("/CrearProyecto")) {
             crearProyecto(request, response);
+        }
+        
+        if (ruta.equals("/BorrarProyecto")) {
+            borrarProyecto(request, response);
+        }
+        
+        if (ruta.equals("/CrearPaquete")) {
+            crearPaquete(request, response);
+        }
+        
+        if (ruta.equals("/BorrarPaquete")) {
+            borrarPaquete(request, response);
         }
 
         if (ruta.equals("/CerrarSession")) {
@@ -161,6 +178,33 @@ public class Controlador extends HttpServlet {
         }
     }
     
+        private void crearUsuario(HttpServletRequest request, HttpServletResponse response, HttpSession session) throws ServletException, IOException {
+        RequestDispatcher dispatcher;
+
+        String idUsuario = request.getParameter("nuevoIdUsuario");
+        String pass = request.getParameter("nuevapass");
+
+        UsuarioDao usuarioDao = this.fabrica.getUsuarioDao();
+        Usuario usuario = usuarioDao.buscar(idUsuario, pass);
+        Usuario usuario2 = new Usuario();
+
+        if (usuario != null) {
+            request.setAttribute("reg", "error");
+            dispatcher = request.getRequestDispatcher("/WEB-INF/vistas/login.jsp");
+            dispatcher.forward(request, response);
+        } else {
+            
+            usuario2.setIdUsuario(idUsuario);
+            usuario2.setPass(pass);
+            
+            usuarioDao.guardar(usuario2);
+ 
+            request.setAttribute("reg", "registrado");
+            dispatcher = request.getRequestDispatcher("/WEB-INF/vistas/login.jsp");
+            dispatcher.forward(request, response); 
+        }
+    }
+    
     private void cerrarSession(HttpSession session) throws ServletException, IOException {
         if (session.getAttribute("usuario") != null) {
             session.invalidate();
@@ -185,16 +229,68 @@ public class Controlador extends HttpServlet {
         usuario.setProyectos(proyectos);
     }
     
-    public void crearProyecto(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
-        ProyectoDao proyectoDao = this.fabrica.getProyectoDao();
+    public int buscarProyecto(int id) {
+        int index = -1;
+        proyectos = proyectoDao.listar(usuario.getIdUsuario());
+        for (int i = 0; i < proyectos.size(); i++) {
+            if (proyectos.get(i).getId() == id) {
+                index = i;
+            }
+        }
+        return index;
+    }
+    
+        public void crearProyecto(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+        
+        ProyectoDao proyectoDao = this.fabrica.getProyectoDao();       
         Proyecto pro = new Proyecto();
-        pro.setNombre(request.getParameter("nombreProyecto"));
+        pro.setNombre(request.getParameter("nombreProyecto"));   
         proyectos.add(pro);
+        
         if (proyectoDao.guardar(pro, usuario.getIdUsuario())) {
-            System.out.println("asdasdas");
             request.setAttribute("creadoValido", "valido");
         } else {
             request.setAttribute("creadoValido", "invalido");
+        } 
+        response.sendRedirect("ProyectosListar"); 
+    }
+    
+    public void borrarProyecto(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+        
+          ProyectoDao proyectoDao = this.fabrica.getProyectoDao();
+        
+        if (proyectoDao.borrar(Integer.parseInt(request.getParameter("idProyecto")))) {
+            request.setAttribute("borradoValido", "valido");
+        } else {
+            request.setAttribute("borradoValido", "invalido");
+        }
+        response.sendRedirect("ProyectosListar");
+        
+    }
+      
+    private void crearPaquete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        
+        PaqueteDao paqueteDao = (PaqueteDao) this.fabrica.getPaqueteDao();
+        Paquete paq = new Paquete();
+        
+        paq.setNombre(request.getParameter("nombrePaquete"));
+        
+        if (paqueteDao.guardar(paq, Integer.parseInt(request.getParameter("idProyecto")))) {
+            request.setAttribute("paqueteCreado", "valido");
+        } else {
+            request.setAttribute("paqueteCreado", "invalido");
+        }
+        response.sendRedirect("ProyectosListar");
+    }
+    
+        public void borrarPaquete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+        
+        PaqueteDao paqueteDao = (PaqueteDao) this.fabrica.getPaqueteDao();
+        
+        if (paqueteDao.borrar(Integer.parseInt(request.getParameter("idPaquete")))) {
+            request.setAttribute("borradoValido", "valido");
+        } else {
+            request.setAttribute("borradoValido", "invalido");
         }
         response.sendRedirect("ProyectosListar");
         

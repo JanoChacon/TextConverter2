@@ -27,7 +27,7 @@ public class ProyectoImpl implements ProyectoDao {
     /**
      * Consulta sql para obtener todas las mesas
      */
-    private static final String SQL_SELECT = "select * from proyecto";
+    private static final String SQL_SELECT = "select * from proyecto where id_usuario = ?";
 
     private static final String SQL_INSERT = "insert into proyecto(nombre, id_usuario) values (?,?)";
 
@@ -49,6 +49,7 @@ public class ProyectoImpl implements ProyectoDao {
 
         try {
             PreparedStatement pstm = this.conn.prepareStatement(SQL_SELECT);
+            pstm.setString(1, idUsuario);
             rs = pstm.executeQuery();
             if (!rs.next()) {
                 Logger.getLogger(ProyectoImpl.class.getName()).log(Level.INFO,
@@ -93,7 +94,19 @@ public class ProyectoImpl implements ProyectoDao {
     
     @Override
     public boolean borrar(int id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+
+        boolean resultado = false;
+
+        try {
+            PreparedStatement pstm = this.conn.prepareStatement(SQL_DELETE);          
+            pstm.setInt(1, id);
+            pstm.executeUpdate();
+            resultado = true;
+
+        } catch (SQLException ex) {
+            Logger.getLogger(ProyectoImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return resultado;
     }
 
     @Override

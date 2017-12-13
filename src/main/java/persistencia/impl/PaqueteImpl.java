@@ -32,9 +32,9 @@ public class PaqueteImpl implements PaqueteDao {
 
     private static final String SQL_INSERT = "insert into paquete(nombre, id_proyecto) values (?, ?)";
 
-    private static final String SQL_DELETE = "delete from paquete where id_proyecto = ?";
+    private static final String SQL_DELETE = "delete from paquete where id_paquete = ?";
 
-    private static final String SQL_UPDATE = "update paquete set nombre = ? where id_proyecto = ?";
+    private static final String SQL_UPDATE = "update paquete set nombre = ? where id_paquete = ?";
 
     private final Connection conn;
 
@@ -97,7 +97,18 @@ public class PaqueteImpl implements PaqueteDao {
 
     @Override
     public boolean borrar(int id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        boolean resultado = false;
+
+        try {
+            PreparedStatement pstm = this.conn.prepareStatement(SQL_DELETE);          
+            pstm.setInt(1, id);
+            pstm.executeUpdate();
+            resultado = true;
+
+        } catch (SQLException ex) {
+            Logger.getLogger(ProyectoImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return resultado;
     }
 
     @Override

@@ -9,12 +9,8 @@
         <div class="navbar-header">
             <a class="navbar-brand" href="#">Bienvenido ${usuario.idUsuario}</a>   
         </div>
-<!--        <ul class="nav navbar-nav">
-            <li><a id ="idActiva" name="idActiva" type="button" class="btn">Crear Proyecto</a></li>
-        </ul>-->
-
         <ul class="nav navbar-nav navbar-right">
-            <li><a name="rutaProyecto" type="button" class="btn">
+            <li><<li><a href="CerrarSession" type="button" class="btn">
                     <span class="glyphicon glyphicon-log-out"></span>Cerrar session</a>
             </li>
         </ul>
@@ -28,24 +24,24 @@
                 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                     Opciones Proyecto <span class="caret"></span></button>
                 <ul class="dropdown-menu" role="menu">
-                    <li><a class="btn" data-toggle="modal" data-target="#ModalcrearProyecto">Crear Proyecto</a></li>
-                    <li><a class="btn" data-toggle="modal" data-target="#ModalborrarProyecto">Borrar Pryecto</a></li>
+                    <li><a name="linkCrearProyecto" class="btn" data-toggle="modal" data-target="#ModalCrearProyecto">Crear Proyecto</a></li>
+                    <li><a name="linkBorrarProyecto" class="btn" data-toggle="modal" data-target="#ModalBorrarProyecto">Borrar Pryecto</a></li>
                 </ul>
             </div>
             <div class="btn-group">
                 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                     Opciones Paquete <span class="caret"></span></button>
                 <ul class="dropdown-menu" role="menu">
-                    <li><a href="#">Subir Nuevo Archivo</a></li>
-                    <li><a href="#">Borrar Archivo</a></li>
+                    <li><a name="linkCrearPaquete" class="btn" data-toggle="modal" data-target="#ModalCrearPaquete">Crear Paquete</a></li>
+                    <li><a name="linkBorrarPaquete" class="btn" data-toggle="modal" data-target="#ModalBorrarPaquete">Borrar Paquete</a></li>
                 </ul>
             </div>
             <div class="btn-group">
                 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                     Opciones Archivo <span class="caret"></span></button>
                 <ul class="dropdown-menu" role="menu">
-                    <li><a href="#">Subir Nuevo Archivo</a></li>
-                    <li><a href="#">Borrar Archivo</a></li>
+                    <li><a name="linkSubirArchivo" class="btn" data-toggle="modal" data-target="#ModalSubirArchivo">Subir Nuevo Archivo</a></li>
+                    <li><a name="linkBorrarArchivo" class="btn" data-toggle="modal" data-target="#ModalBorrarArchivo">Borrar Archivo</a></li>
                 </ul>
             </div>
         </div>
@@ -60,19 +56,19 @@
         <div class="col-sm-2">
             <div class="treemenu">
                 <c:forEach items="${proyectos}" var="proyecto">
-                    <div level="0" value="${proyecto.id}"> 
+                    <div level="0" value="${proyecto.id}" nombreItem="${proyecto.nombre}"> 
                         <a id ="linkProyecto${proyecto.id}">
-                        <span class="lbl">${proyecto.nombre}</span></a>
+                            <span class="lbl">${proyecto.nombre}</span></a>
                     </div>
                     <c:forEach items="${proyecto.paquetes}" var="paquete">
-                        <div level="1" value="${paquete.id}"> 
+                        <div level="1" value="${paquete.id}" nombreItem="${paquete.nombre}"> 
                             <a id ="linkPaquete${paquete.id}">
-                            <span class="lbl">${paquete.nombre}</span></a>
+                                <span class="lbl">${paquete.nombre}</span></a>
                         </div>
                         <c:forEach items="${paquete.archivos}" var="archivo">
-                            <div level="2" value="${archivo.id}"> 
+                            <div level="2" value="${archivo.id}" nombreItem="${archivo.nombre}"> 
                                 <a id ="linkArchivo${archivo.id}">
-                                <span class="lbl">${archivo.nombre}</span></a>
+                                    <span class="lbl">${archivo.nombre}</span></a>
                             </div>
                         </c:forEach>
                     </c:forEach>
@@ -101,7 +97,7 @@
 </div>
 
 <!-- modal de creacion de proyecto -->
-<div id="ModalcrearProyecto"  class="modal fade" role="dialog">
+<div id="ModalCrearProyecto"  class="modal fade" role="dialog">
     <div class="modal-dialog">
         <!-- Modal content-->
         <div class="modal-content">
@@ -113,7 +109,7 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="nombreProyecto">Nombre del nuevo proyecto:</label>
-                        <input type="text" class="form-control" placeholder="nombre" name="nombreProyecto">
+                        <input type="text" class="form-control" placeholder="nombre" name="nombreProyecto" required="required">
                         <input name = "idProyecto" id="projID1"/>
                     </div>
                 </div>
@@ -127,8 +123,7 @@
 </div>
 
 <!--Modal para borrar Proyecto seleccionado-->
-
-<div id="ModalborrarProyecto"  class="modal fade" role="dialog">
+<div id="ModalBorrarProyecto"  class="modal fade" role="dialog">
     <div class="modal-dialog">
         <!-- Modal content-->
         <div class="modal-content">
@@ -136,18 +131,131 @@
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                 <h4 class="modal-title">Borrar Proyecto</h4>
             </div>
-            <div class="alert alert-danger">
-                Esta accion tambien borrara los subcontenidos.
-            </div>
             <form name="FormBorrarProyecto" action="BorrarProyecto" method="POST">
                 <div class="modal-body">
                     <div class="form-group">
-                        <label for="nombreProyecto">Esta seguro de borrar el Proyecto:</label>
-                        <input type="text" class="form-control" placeholder="nombre" name="idProyecto" value="asd">
+                        <label for="nombreProyectoModal">¿Esta seguro de borrar el siguiente Proyecto?</label>
+                        <h4 class="modal-title">
+                            <input name ="nombreProyectoModal" disabled readonly/></h4>
+                        <input name ="idProyecto"/>
+                    </div>
+                </div>
+                <div class="alert alert-danger">
+                    Esta accion tambien borrara los subcontenidos.
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-danger" id="btn-enviar">Borrar</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                </div>
+            </form>
+        </div>   
+    </div>
+</div>
+
+<!-- modal de creacion de paquete -->
+<div id="ModalCrearPaquete"  class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <form name="FormCrearPaquete" action="CrearPaquete" method="POST">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Nuevo Paquete en proyecto: <input name ="nombreProyectoModal" disabled readonly/></h4>
+                </div>
+
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="nombrePaquete">Nombre del nuevo paquete:</label>
+                        <input type="text" class="form-control" placeholder="nombre" name="nombrePaquete" required="required">
+                        <input name ="idProyecto"/>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-success" id="btn-enviar">Crear</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                </div>
+            </form>
+        </div>   
+    </div>
+</div>
+
+<!-- modal para borrar de paquete -->
+<div id="ModalBorrarPaquete"  class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Borrar Paquete</h4>
+            </div>
+            <form name="FormBorrarPaquete" action="BorrarPaquete" method="POST">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="nombrePaqueteModal">¿Esta seguro de borrar el siguiente Paquete?</label>
+                        <h4 class="modal-title">
+                            <input name ="nombrePaqueteModal" disabled readonly/></h4>
+                        <input name ="idPaquete"/>
+                    </div>
+                </div>
+                <div class="alert alert-danger">
+                    Esta accion tambien borrara los subcontenidos.
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-danger" id="btn-enviar">Borrar</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                </div>
+            </form>
+        </div>   
+    </div>
+</div>
+
+<!-- modal de subida de archivo -->
+<div id="ModalSubirArchivo"  class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <form name="FormSubirArchivo" action="SubirArchivo" method="POST">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Subir Archivo en Paquete: <input name ="nombrePaqueteModal" disabled readonly/></h4>
+                </div>
+
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="nombrePaquete">Archivo nuevo:</label>
+                        <input type="text" class="form-control" placeholder="nombre" name="nombrePaquete">
+                        <input name ="idPaquete"/>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success" id="btn-enviar">Crear</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                </div>
+            </form>
+        </div>   
+    </div>
+</div>
+
+<!-- modal para borrar archivo -->
+<div id="ModalBorrarArchivo"  class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Borrar Archivo</h4>
+            </div>
+            <form name="FormBorrarArchivo" action="BorrarArchivo" method="POST">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="nombreArchivoModal">¿Esta seguro de borrar el siguiente Archivo?</label>
+                        <h4 class="modal-title">
+                            <input name ="nombreArchivoModal" disabled readonly/></h4>
+                        <input name ="idArchivo"/>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-danger" id="btn-enviar">Borrar</button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
                 </div>
             </form>
@@ -192,15 +300,28 @@
             } else {
                 this.openItem($el);
             }
-            
-            if (parseInt($el.attr("level")) == 0) {
-                document.FormCrearProyecto.idProyecto.value = $el.attr("value");
-            }else if (parseInt($el.attr("level")) == 1) {
-                document.FormCrearProyecto.idProyecto.value = $el.attr("value");
-            }else if (parseInt($el.attr("level")) == 2) {
-                document.FormCrearProyecto.idProyecto.value = $el.attr("value");
-            }
 
+            if (parseInt($el.attr("level")) == 0) {
+
+                document.FormBorrarProyecto.nombreProyectoModal.value = $el.attr("nombreItem");
+                document.FormBorrarProyecto.idProyecto.value = $el.attr("value");
+                
+                document.FormCrearPaquete.nombreProyectoModal.value = $el.attr("nombreItem");
+                document.FormCrearPaquete.idProyecto.value = $el.attr("value");
+
+            } else if (parseInt($el.attr("level")) == 1) {
+                
+                document.FormBorrarPaquete.nombrePaqueteModal.value = $el.attr("nombreItem");
+                document.FormBorrarPaquete.idPaquete.value = $el.attr("value");
+                
+                document.FormSubirArchivo.nombrePaqueteModal.value = $el.attr("nombreItem");
+                document.FormSubirArchivo.idPaquete.value = $el.attr("value");
+                
+                document.FormBorrarArchivo.idArchivo.value = $el.attr("value");
+                
+            } else if (parseInt($el.attr("level")) == 2) {
+                
+            }
         }
 
         getElementTreeMenuId($el) {

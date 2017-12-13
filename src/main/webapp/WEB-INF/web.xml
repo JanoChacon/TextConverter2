@@ -27,10 +27,14 @@
     <servlet-mapping>
         <servlet-name>Controlador</servlet-name>
         <url-pattern>/CrearProyecto</url-pattern>
+        <url-pattern>/CrearPaquete</url-pattern>
         <url-pattern>/Ingresar</url-pattern>
         <url-pattern>/CerrarSession</url-pattern>
+        <url-pattern>/Registrar</url-pattern>
         <url-pattern>/ProyectosListar</url-pattern>
+        <url-pattern>/BorrarPaquete</url-pattern>
         <url-pattern>/Logearse</url-pattern>
+        <url-pattern>/BorrarProyecto</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
