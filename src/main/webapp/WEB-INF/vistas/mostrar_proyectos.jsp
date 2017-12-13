@@ -110,7 +110,6 @@
                     <div class="form-group">
                         <label for="nombreProyecto">Nombre del nuevo proyecto:</label>
                         <input type="text" class="form-control" placeholder="nombre" name="nombreProyecto" required="required">
-                        <input name = "idProyecto" id="projID1"/>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -214,7 +213,7 @@
     <div class="modal-dialog">
         <!-- Modal content-->
         <div class="modal-content">
-            <form name="FormSubirArchivo" action="SubirArchivo" method="POST">
+            <form name="FormSubirArchivo" action="SubirArchivo" method="POST" enctype='multipart/form-data'>
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                     <h4 class="modal-title">Subir Archivo en Paquete: <input name ="nombrePaqueteModal" disabled readonly/></h4>
@@ -223,12 +222,13 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="nombrePaquete">Archivo nuevo:</label>
-                        <input type="text" class="form-control" placeholder="nombre" name="nombrePaquete">
+                        <input  type="file" name="archivo" size = "15" accept=".pdf, .txt, .docx, .doc, .html" required onchange="extraerNombre(this.value)"/>
                         <input name ="idPaquete"/>
+                        <input name ="nombreArchivo"/>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-success" id="btn-enviar">Crear</button>
+                    <button type="submit" class="btn btn-success" id="btn-enviar">Subir</button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
                 </div>
             </form>
@@ -305,22 +305,22 @@
 
                 document.FormBorrarProyecto.nombreProyectoModal.value = $el.attr("nombreItem");
                 document.FormBorrarProyecto.idProyecto.value = $el.attr("value");
-                
+
                 document.FormCrearPaquete.nombreProyectoModal.value = $el.attr("nombreItem");
                 document.FormCrearPaquete.idProyecto.value = $el.attr("value");
 
             } else if (parseInt($el.attr("level")) == 1) {
-                
+
                 document.FormBorrarPaquete.nombrePaqueteModal.value = $el.attr("nombreItem");
                 document.FormBorrarPaquete.idPaquete.value = $el.attr("value");
-                
+
                 document.FormSubirArchivo.nombrePaqueteModal.value = $el.attr("nombreItem");
                 document.FormSubirArchivo.idPaquete.value = $el.attr("value");
-                
+
                 document.FormBorrarArchivo.idArchivo.value = $el.attr("value");
-                
+
             } else if (parseInt($el.attr("level")) == 2) {
-                
+
             }
         }
 
@@ -403,6 +403,11 @@
         }
     }
     var menu = new TreeMenu($(".treemenu"));
+
+    function extraerNombre(fic) {
+        fic = fic.split('\\');
+        document.FormSubirArchivo.nombreArchivo.value = fic[fic.length - 1];
+    }
 
 </script>
 </html>

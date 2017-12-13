@@ -5,6 +5,9 @@ package textconverter.controlador;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+import cl.textconwebservice.ConversorService;
+import cl.textconwebservice.ConversorService_Service;
+import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -15,6 +18,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.Part;
 import persistencia.dao.ArchivoDao;
 import persistencia.dao.PaqueteDao;
 import persistencia.dao.ProyectoDao;
@@ -29,6 +33,7 @@ import textconverter.logic.Usuario;
  *
  * @author Alejandro
  */
+ @javax.servlet.annotation.MultipartConfig
 public class Controlador extends HttpServlet {
 
     /**
@@ -50,6 +55,8 @@ public class Controlador extends HttpServlet {
 
     public ArrayList<Proyecto> proyectos;
 
+    ConversorService_Service cliente;
+
     @Override
     public void init() throws ServletException {
 
@@ -70,15 +77,15 @@ public class Controlador extends HttpServlet {
 
         String destino = "/WEB-INF/vistas/";
 
-        if (ruta.equals("/Ingresar")) { 
-            RequestDispatcher rd = request.getRequestDispatcher(destino+"login.jsp");
+        if (ruta.equals("/Ingresar")) {
+            RequestDispatcher rd = request.getRequestDispatcher(destino + "login.jsp");
             rd.forward(request, response);
-        
+
         }
         if (ruta.equals("/Logearse")) {
             validarUsuario(request, response, session);
         }
-        
+
         if (ruta.equals("/Registrar")) {
             crearUsuario(request, response, session);
         }
@@ -88,33 +95,35 @@ public class Controlador extends HttpServlet {
             listarDocumentos(usuario);
             request.setAttribute("usuario", usuario);
             request.setAttribute("proyectos", usuario.getProyectos());
-            RequestDispatcher rd = request.getRequestDispatcher(destino+"mostrar_proyectos.jsp");
+            RequestDispatcher rd = request.getRequestDispatcher(destino + "mostrar_proyectos.jsp");
             rd.forward(request, response);
         }
-        
+
         if (ruta.equals("/CrearProyecto")) {
             crearProyecto(request, response);
         }
-        
+
         if (ruta.equals("/BorrarProyecto")) {
             borrarProyecto(request, response);
         }
-        
+
         if (ruta.equals("/CrearPaquete")) {
             crearPaquete(request, response);
         }
-        
+
         if (ruta.equals("/BorrarPaquete")) {
             borrarPaquete(request, response);
         }
 
-        if (ruta.equals("/CerrarSession")) {
-            cerrarSession(session);
-            RequestDispatcher rd = request.getRequestDispatcher( destino += "login.jsp");
-            rd.forward(request, response);
+        if (ruta.equals("/SubirArchivo")) {
+            subirArchivo(request, response);
         }
 
-        
+        if (ruta.equals("/CerrarSession")) {
+            cerrarSession(session);
+            RequestDispatcher rd = request.getRequestDispatcher(destino += "login.jsp");
+            rd.forward(request, response);
+        }
 
     }
 
@@ -177,8 +186,8 @@ public class Controlador extends HttpServlet {
             dispatcher.forward(request, response);
         }
     }
-    
-        private void crearUsuario(HttpServletRequest request, HttpServletResponse response, HttpSession session) throws ServletException, IOException {
+
+    private void crearUsuario(HttpServletRequest request, HttpServletResponse response, HttpSession session) throws ServletException, IOException {
         RequestDispatcher dispatcher;
 
         String idUsuario = request.getParameter("nuevoIdUsuario");
@@ -193,18 +202,18 @@ public class Controlador extends HttpServlet {
             dispatcher = request.getRequestDispatcher("/WEB-INF/vistas/login.jsp");
             dispatcher.forward(request, response);
         } else {
-            
+
             usuario2.setIdUsuario(idUsuario);
             usuario2.setPass(pass);
-            
+
             usuarioDao.guardar(usuario2);
- 
+
             request.setAttribute("reg", "registrado");
             dispatcher = request.getRequestDispatcher("/WEB-INF/vistas/login.jsp");
-            dispatcher.forward(request, response); 
+            dispatcher.forward(request, response);
         }
     }
-    
+
     private void cerrarSession(HttpSession session) throws ServletException, IOException {
         if (session.getAttribute("usuario") != null) {
             session.invalidate();
@@ -212,12 +221,6 @@ public class Controlador extends HttpServlet {
         }
     }
 
-    /**
-     *
-     * seccion de dao
-     *
-     * @param usuario
-     */
     public void listarDocumentos(Usuario usuario) {
         proyectos = proyectoDao.listar(usuario.getIdUsuario());
         for (int i = 0; i < proyectos.size(); i++) {
@@ -228,7 +231,7 @@ public class Controlador extends HttpServlet {
         }
         usuario.setProyectos(proyectos);
     }
-    
+
     public int buscarProyecto(int id) {
         int index = -1;
         proyectos = proyectoDao.listar(usuario.getIdUsuario());
@@ -239,42 +242,42 @@ public class Controlador extends HttpServlet {
         }
         return index;
     }
-    
-        public void crearProyecto(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
-        
-        ProyectoDao proyectoDao = this.fabrica.getProyectoDao();       
+
+    public void crearProyecto(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        ProyectoDao proyectoDao = this.fabrica.getProyectoDao();
         Proyecto pro = new Proyecto();
-        pro.setNombre(request.getParameter("nombreProyecto"));   
+        pro.setNombre(request.getParameter("nombreProyecto"));
         proyectos.add(pro);
-        
+
         if (proyectoDao.guardar(pro, usuario.getIdUsuario())) {
             request.setAttribute("creadoValido", "valido");
         } else {
             request.setAttribute("creadoValido", "invalido");
-        } 
-        response.sendRedirect("ProyectosListar"); 
+        }
+        response.sendRedirect("ProyectosListar");
     }
-    
-    public void borrarProyecto(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
-        
-          ProyectoDao proyectoDao = this.fabrica.getProyectoDao();
-        
+
+    public void borrarProyecto(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        ProyectoDao proyectoDao = this.fabrica.getProyectoDao();
+
         if (proyectoDao.borrar(Integer.parseInt(request.getParameter("idProyecto")))) {
             request.setAttribute("borradoValido", "valido");
         } else {
             request.setAttribute("borradoValido", "invalido");
         }
         response.sendRedirect("ProyectosListar");
-        
+
     }
-      
+
     private void crearPaquete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        
+
         PaqueteDao paqueteDao = (PaqueteDao) this.fabrica.getPaqueteDao();
         Paquete paq = new Paquete();
-        
+
         paq.setNombre(request.getParameter("nombrePaquete"));
-        
+
         if (paqueteDao.guardar(paq, Integer.parseInt(request.getParameter("idProyecto")))) {
             request.setAttribute("paqueteCreado", "valido");
         } else {
@@ -282,18 +285,41 @@ public class Controlador extends HttpServlet {
         }
         response.sendRedirect("ProyectosListar");
     }
-    
-        public void borrarPaquete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
-        
+
+    public void borrarPaquete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
         PaqueteDao paqueteDao = (PaqueteDao) this.fabrica.getPaqueteDao();
-        
+
         if (paqueteDao.borrar(Integer.parseInt(request.getParameter("idPaquete")))) {
             request.setAttribute("borradoValido", "valido");
         } else {
             request.setAttribute("borradoValido", "invalido");
         }
         response.sendRedirect("ProyectosListar");
-        
+
     }
-    
+
+    public void subirArchivo(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        cliente = new ConversorService_Service();
+        //Se obtiene la conexion con el SOAP
+        ConversorService service = cliente.getConversorServicePort();
+        String nombreArchivo = "";
+        Part archivoPart = request.getPart("archivo");
+        nombreArchivo = request.getParameter("nombreArchivo");
+        
+        int archivoSize = (int) archivoPart.getSize(); 
+        byte[] archivo = null; //el buffer
+
+        if (archivoSize > 0) {
+            archivo = new byte[archivoSize];
+            try (DataInputStream dis = new DataInputStream(archivoPart.getInputStream())) {
+                dis.readFully(archivo);
+                String result = service.convertidorGlobal(archivo, nombreArchivo);
+                System.out.println(result);
+            }
+        }
+
+    }
+
 }

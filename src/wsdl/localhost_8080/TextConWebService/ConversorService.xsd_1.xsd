@@ -1,0 +1,83 @@
+<?xml version='1.0' encoding='UTF-8'?><!-- Published by JAX-WS RI (http://jax-ws.java.net). RI's version is Metro/2.3.2-b608 (trunk-7979; 2015-01-21T12:50:19+0000) JAXWS-RI/2.2.11-b150120.1832 JAXWS-API/2.2.12 JAXB-RI/2.2.12-b141219.1637 JAXB-API/2.2.13-b141020.1521 svn-revision#unknown. --><xs:schema xmlns:tns="http://textconwebservice.cl/" xmlns:xs="http://www.w3.org/2001/XMLSchema" version="1.0" targetNamespace="http://textconwebservice.cl/">
+
+<xs:element name="convertidorGlobal" type="tns:convertidorGlobal"/>
+
+<xs:element name="convertidorGlobalResponse" type="tns:convertidorGlobalResponse"/>
+
+<xs:element name="convertirDOC" type="tns:convertirDOC"/>
+
+<xs:element name="convertirDOCResponse" type="tns:convertirDOCResponse"/>
+
+<xs:element name="convertirDOCX" type="tns:convertirDOCX"/>
+
+<xs:element name="convertirDOCXResponse" type="tns:convertirDOCXResponse"/>
+
+<xs:element name="convertirPDF" type="tns:convertirPDF"/>
+
+<xs:element name="convertirPDFResponse" type="tns:convertirPDFResponse"/>
+
+<xs:element name="convertirTXT" type="tns:convertirTXT"/>
+
+<xs:element name="convertirTXTResponse" type="tns:convertirTXTResponse"/>
+
+<xs:complexType name="convertirDOCX">
+<xs:sequence>
+<xs:element name="bytes" type="xs:base64Binary" nillable="true" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="convertirDOCXResponse">
+<xs:sequence>
+<xs:element name="return" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="convertirPDF">
+<xs:sequence>
+<xs:element name="bytes" type="xs:base64Binary" nillable="true" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="convertirPDFResponse">
+<xs:sequence>
+<xs:element name="return" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="convertidorGlobal">
+<xs:sequence>
+<xs:element name="bytes" type="xs:base64Binary" nillable="true" minOccurs="0"/>
+<xs:element name="nombre" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="convertidorGlobalResponse">
+<xs:sequence>
+<xs:element name="return" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="convertirTXT">
+<xs:sequence>
+<xs:element name="bytes" type="xs:base64Binary" nillable="true" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="convertirTXTResponse">
+<xs:sequence>
+<xs:element name="return" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="convertirDOC">
+<xs:sequence>
+<xs:element name="bytes" type="xs:base64Binary" nillable="true" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="convertirDOCResponse">
+<xs:sequence>
+<xs:element name="return" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+</xs:schema>

@@ -28,6 +28,7 @@
         <servlet-name>Controlador</servlet-name>
         <url-pattern>/CrearProyecto</url-pattern>
         <url-pattern>/CrearPaquete</url-pattern>
+        <url-pattern>/SubirArchivo</url-pattern>
         <url-pattern>/Ingresar</url-pattern>
         <url-pattern>/CerrarSession</url-pattern>
         <url-pattern>/Registrar</url-pattern>
