@@ -20,6 +20,7 @@ import persistencia.factory.DAOFactory;
 import persistencia.factory.MysqlDaoFactory;
 import textconverter.logic.Archivo;
 import textconverter.logic.Paquete;
+import textconverter.logic.Usuario;
 
 /**
  *
@@ -31,8 +32,10 @@ public class ArchivoImpl implements ArchivoDao {
      * Consulta sql para obtener todas los paquetes
      */
     private static final String SQL_SELECT = "select * from archivo where id_paquete = ?";
+    
+    private static final String SQL_BUSCAR = "select * from archivo where id_archivo = ?";
 
-    private static final String SQL_INSERT = "insert into archivo(nombre, id_paquete) values (?, ?)";
+    private static final String SQL_INSERT = "insert into archivo(nombre, texto, id_paquete) values (?, ?, ?)";
 
     private static final String SQL_DELETE = "delete from archivo where id_archivo = ?";
 
@@ -87,7 +90,8 @@ public class ArchivoImpl implements ArchivoDao {
         try {
             PreparedStatement pstm = this.conn.prepareStatement(SQL_INSERT);
             pstm.setString(1, arch.getNombre());
-            pstm.setInt(2, id_paquete);
+            pstm.setString(2, arch.getText());
+            pstm.setInt(3, id_paquete);
             pstm.executeUpdate();
             resultado = true;
 
@@ -104,12 +108,38 @@ public class ArchivoImpl implements ArchivoDao {
 
     @Override
     public Archivo buscar(int id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
+        Archivo archivo = null;
+        ResultSet rs;
+
+        try {
+            PreparedStatement pstm = this.conn.prepareStatement(SQL_BUSCAR);
+            pstm.setInt(1, id);
+            rs = pstm.executeQuery();
+
+           if (rs.next()) {
+                archivo = map(rs);
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(UsuarioImpl.class.getName()).log(Level.SEVERE,
+                    null, ex);
+        }
+
+        return archivo;
     }
 
     @Override
     public boolean editar(Archivo mesa) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    private static Archivo map(ResultSet resultSet) throws SQLException {
+        Archivo archivo = new Archivo();
+        archivo.setId(resultSet.getInt("id_archivo"));
+        archivo.setNombre(resultSet.getString("nombre"));
+        archivo.setText(resultSet.getString("texto"));
+        return archivo;
     }
 
 }

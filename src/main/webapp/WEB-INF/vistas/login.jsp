@@ -28,7 +28,7 @@
 <div class="container">
     <div class="jumbotron">
         <div class="page-header">
-            <fieldset><legend><h2>Conversor de Archivos a Texto simple</h2></legend> 
+            <legend><h2>Conversor de Archivos a Texto simple</h2></legend> 
         </div>
         <p>
             Convierte tus documentos de texto digitales de los formatos más comunes a formato de texto simple 
@@ -52,11 +52,11 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="user">Usuario:</label>
-                        <input type="text" class="form-control" placeholder="nombre de usuario" name="user" required="required">
+                        <input type="text"  pattern="[a-z0-9._%+-].{1,}" class="form-control" placeholder="nombre de usuario" name="user" required="required">
                     </div>
                     <div class="form-group">
                         <label for="passwd">Contraseña:</label>
-                        <input type="password" class="form-control" name="passwd" required="required">
+                        <input type="password" pattern="[a-z0-9._%+-].{1,}" class="form-control" name="passwd" required="required">
                     </div>
                     <div id="nologin">
                     </div>
@@ -82,15 +82,15 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="user">Usuario:</label>
-                        <input type="text" class="form-control" placeholder="Nuevo nombre de usuario" name="nuevoIdUsuario" required="required">
+                        <input type="text" pattern="[a-z0-9._%+-].{3,}"class="form-control" placeholder="Nuevo nombre de usuario" name="nuevoIdUsuario" required="required">
                     </div>
                     <div class="form-group">
                         <label for="nuevapass">Contraseña:</label>
-                        <input id="nuevapass" type="password" class="form-control" name="nuevapass" required="required">
+                        <input id="nuevapass" pattern="[a-z0-9._%+-].{3,}" type="password" class="form-control" name="nuevapass" required="required">
                     </div>
                     <div class="form-group">
                         <label for="nuevapass2">Confirmar Contraseña:</label>
-                        <input id="nuevapass2" type="password" class="form-control" required="required">
+                        <input id="nuevapass2" pattern="[a-z0-9._%+-].{3,}" type="password" class="form-control" required="required">
                     </div>
                     <div id="noreg">
                     </div>

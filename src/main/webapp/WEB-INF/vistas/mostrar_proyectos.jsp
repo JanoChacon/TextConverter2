@@ -24,24 +24,29 @@
                 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                     Opciones Proyecto <span class="caret"></span></button>
                 <ul class="dropdown-menu" role="menu">
-                    <li><a name="linkCrearProyecto" class="btn" data-toggle="modal" data-target="#ModalCrearProyecto">Crear Proyecto</a></li>
-                    <li><a name="linkBorrarProyecto" class="btn" data-toggle="modal" data-target="#ModalBorrarProyecto">Borrar Pryecto</a></li>
+                    <li><a id="linkCrearProyecto" class="btn" data-toggle="modal" data-target="#ModalCrearProyecto">Crear Proyecto</a></li>
+                    <li><a id="linkBorrarProyecto" style="visibility:hidden;" class="btn" data-toggle="modal" data-target="#ModalBorrarProyecto">Borrar Pryecto</a></li>
                 </ul>
             </div>
             <div class="btn-group">
                 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                     Opciones Paquete <span class="caret"></span></button>
                 <ul class="dropdown-menu" role="menu">
-                    <li><a name="linkCrearPaquete" class="btn" data-toggle="modal" data-target="#ModalCrearPaquete">Crear Paquete</a></li>
-                    <li><a name="linkBorrarPaquete" class="btn" data-toggle="modal" data-target="#ModalBorrarPaquete">Borrar Paquete</a></li>
+                    <li><a id="linkCrearPaquete" style="visibility:hidden;" class="btn" data-toggle="modal" data-target="#ModalCrearPaquete">Crear Paquete</a></li>
+                    <li><a id="linkBorrarPaquete" style="visibility:hidden;" class="btn" data-toggle="modal" data-target="#ModalBorrarPaquete">Borrar Paquete</a></li>
                 </ul>
             </div>
             <div class="btn-group">
                 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                     Opciones Archivo <span class="caret"></span></button>
                 <ul class="dropdown-menu" role="menu">
-                    <li><a name="linkSubirArchivo" class="btn" data-toggle="modal" data-target="#ModalSubirArchivo">Subir Nuevo Archivo</a></li>
-                    <li><a name="linkBorrarArchivo" class="btn" data-toggle="modal" data-target="#ModalBorrarArchivo">Borrar Archivo</a></li>
+                    <li><form id="FormVerArchivo" style="visibility:hidden;" name="FormVerArchivo" action="MostrarTexto" method="POST">
+                            <input name ="idArchivo" hidden="hidden"/>
+                            <button  type="submit" id="linkMostrarContenido" class="btn" style="color:black;padding-left:3.0em" >Ver Contenido</button>
+                        </form>
+                    </li>
+                    <li><a id="linkSubirArchivo" style="visibility:hidden;" class="btn" data-toggle="modal" data-target="#ModalSubirArchivo" >Subir Nuevo Archivo</a></li>
+                    <li><a id="linkBorrarArchivo" style="visibility:hidden;" class="btn" data-toggle="modal" data-target="#ModalBorrarArchivo">Borrar Archivo</a></li>
                 </ul>
             </div>
         </div>
@@ -66,7 +71,7 @@
                                 <span class="lbl">${paquete.nombre}</span></a>
                         </div>
                         <c:forEach items="${paquete.archivos}" var="archivo">
-                            <div level="2" value="${archivo.id}" nombreItem="${archivo.nombre}"> 
+                            <div level="2" value="${archivo.id}" nombreItem="${archivo.nombre}">
                                 <a id ="linkArchivo${archivo.id}">
                                     <span class="lbl">${archivo.nombre}</span></a>
                             </div>
@@ -79,18 +84,17 @@
         <div class="col-sm-10">
             <div class="jumbotron">
                 <div id="contenido">
-                    <h2>Textconverter</h2>
-                    <br>
-                    <h4>
-                        cosas que van acá
-                        <br>
-                        <br>
-                        <br>
-                        <br>
-                        <br>
-                        <br>
-                    </h4>
-                </div>
+                    <div class="page-header">
+                        <legend>
+                            <h2>${tituloTexto}</h2>
+                        </legend> 
+                    </div>
+                        <div>
+                        <p>
+                            ${textoMostrar}
+                        </p>
+                        <br><br><br><br><br><br>
+                    </div>
             </div>
         </div>
     </div>
@@ -109,7 +113,7 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="nombreProyecto">Nombre del nuevo proyecto:</label>
-                        <input type="text" class="form-control" placeholder="nombre" name="nombreProyecto" required="required">
+                        <input type="text" pattern="[a-z0-9._%+-].{1,}" class="form-control" placeholder="nombre" name="nombreProyecto" required="required">
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -136,7 +140,7 @@
                         <label for="nombreProyectoModal">¿Esta seguro de borrar el siguiente Proyecto?</label>
                         <h4 class="modal-title">
                             <input name ="nombreProyectoModal" disabled readonly/></h4>
-                        <input name ="idProyecto"/>
+                        <input name ="idProyecto" hidden="hidden"/>
                     </div>
                 </div>
                 <div class="alert alert-danger">
@@ -165,8 +169,8 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="nombrePaquete">Nombre del nuevo paquete:</label>
-                        <input type="text" class="form-control" placeholder="nombre" name="nombrePaquete" required="required">
-                        <input name ="idProyecto"/>
+                        <input type="text" pattern="[a-z0-9._%+-].{1,}" class="form-control" placeholder="nombre" name="nombrePaquete" required="required">
+                        <input name ="idProyecto" hidden="hidden"/>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -193,7 +197,7 @@
                         <label for="nombrePaqueteModal">¿Esta seguro de borrar el siguiente Paquete?</label>
                         <h4 class="modal-title">
                             <input name ="nombrePaqueteModal" disabled readonly/></h4>
-                        <input name ="idPaquete"/>
+                        <input name ="idPaquete" hidden="hidden"/>
                     </div>
                 </div>
                 <div class="alert alert-danger">
@@ -222,9 +226,9 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="nombrePaquete">Archivo nuevo:</label>
-                        <input  type="file" name="archivo" size = "15" accept=".pdf, .txt, .docx, .doc, .html" required onchange="extraerNombre(this.value)"/>
-                        <input name ="idPaquete"/>
-                        <input name ="nombreArchivo"/>
+                        <input  type="file" name="archivo" size = "10" accept=".pdf, .txt, .docx, .doc" required onchange="extraerNombre(this.value)"/>
+                        <input name ="idPaquete" hidden="hidden"/>
+                        <input name ="nombreArchivo" hidden="hidden"/>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -251,7 +255,7 @@
                         <label for="nombreArchivoModal">¿Esta seguro de borrar el siguiente Archivo?</label>
                         <h4 class="modal-title">
                             <input name ="nombreArchivoModal" disabled readonly/></h4>
-                        <input name ="idArchivo"/>
+                        <input name ="idArchivo" hidden="hidden" />
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -305,9 +309,11 @@
 
                 document.FormBorrarProyecto.nombreProyectoModal.value = $el.attr("nombreItem");
                 document.FormBorrarProyecto.idProyecto.value = $el.attr("value");
-
                 document.FormCrearPaquete.nombreProyectoModal.value = $el.attr("nombreItem");
                 document.FormCrearPaquete.idProyecto.value = $el.attr("value");
+
+                document.getElementById("linkBorrarProyecto").style.visibility = "visible";
+                document.getElementById("linkCrearPaquete").style.visibility = "visible";
 
             } else if (parseInt($el.attr("level")) == 1) {
 
@@ -317,9 +323,18 @@
                 document.FormSubirArchivo.nombrePaqueteModal.value = $el.attr("nombreItem");
                 document.FormSubirArchivo.idPaquete.value = $el.attr("value");
 
-                document.FormBorrarArchivo.idArchivo.value = $el.attr("value");
+                document.getElementById("linkBorrarPaquete").style.visibility = "visible";
+                document.getElementById("linkSubirArchivo").style.visibility = "visible";
+
 
             } else if (parseInt($el.attr("level")) == 2) {
+
+                document.FormVerArchivo.idArchivo.value = $el.attr("value")
+                document.FormBorrarArchivo.nombreArchivoModal.value = $el.attr("nombreItem");
+                document.FormBorrarArchivo.idArchivo.value = $el.attr("value");
+
+                document.FormVerArchivo.style.visibility = "visible";
+                document.getElementById("linkBorrarArchivo").style.visibility = "visible";
 
             }
         }

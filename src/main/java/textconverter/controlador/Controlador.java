@@ -25,15 +25,17 @@ import persistencia.dao.ProyectoDao;
 import persistencia.dao.UsuarioDao;
 import persistencia.factory.DAOFactory;
 import persistencia.factory.TipoBD;
+import textconverter.logic.Archivo;
 import textconverter.logic.Paquete;
 import textconverter.logic.Proyecto;
+import textconverter.logic.Tipo;
 import textconverter.logic.Usuario;
 
 /**
  *
  * @author Alejandro
  */
- @javax.servlet.annotation.MultipartConfig
+@javax.servlet.annotation.MultipartConfig
 public class Controlador extends HttpServlet {
 
     /**
@@ -90,8 +92,7 @@ public class Controlador extends HttpServlet {
             crearUsuario(request, response, session);
         }
 
-        if (ruta.equals("/ProyectosListar")) {
-            System.out.println("hola " + usuario.getIdUsuario());
+        if (ruta.equals("/ProyectosListar") && detectarLogin(request, response, session)) {
             listarDocumentos(usuario);
             request.setAttribute("usuario", usuario);
             request.setAttribute("proyectos", usuario.getProyectos());
@@ -99,30 +100,39 @@ public class Controlador extends HttpServlet {
             rd.forward(request, response);
         }
 
-        if (ruta.equals("/CrearProyecto")) {
+        if (ruta.equals("/CrearProyecto") && detectarLogin(request, response, session)) {
             crearProyecto(request, response);
         }
 
-        if (ruta.equals("/BorrarProyecto")) {
+        if (ruta.equals("/BorrarProyecto") && detectarLogin(request, response, session)) {
             borrarProyecto(request, response);
         }
 
-        if (ruta.equals("/CrearPaquete")) {
+        if (ruta.equals("/CrearPaquete") && detectarLogin(request, response, session)) {
             crearPaquete(request, response);
         }
 
-        if (ruta.equals("/BorrarPaquete")) {
+        if (ruta.equals("/BorrarPaquete") && detectarLogin(request, response, session)) {
             borrarPaquete(request, response);
         }
 
-        if (ruta.equals("/SubirArchivo")) {
+        if (ruta.equals("/SubirArchivo") && detectarLogin(request, response, session)) {
             subirArchivo(request, response);
         }
 
-        if (ruta.equals("/CerrarSession")) {
+        if (ruta.equals("/MostrarTexto") && detectarLogin(request, response, session)) {
+            extraerContenido(request, response);
+            RequestDispatcher rd = request.getRequestDispatcher("ProyectosListar");
+            rd.forward(request, response);
+        }
+
+        if (ruta.equals("/CerrarSession")&& detectarLogin(request, response, session)) {
             cerrarSession(session);
             RequestDispatcher rd = request.getRequestDispatcher(destino += "login.jsp");
             rd.forward(request, response);
+        }
+        else{
+           ruta.equals("/Ingresar");
         }
 
     }
@@ -220,6 +230,18 @@ public class Controlador extends HttpServlet {
             isLoged = false;
         }
     }
+    
+        private boolean detectarLogin(HttpServletRequest request, HttpServletResponse response, HttpSession session) throws ServletException, IOException {
+        if (session == null || !isLoged || session.getAttribute("usuario") == null ) {
+            RequestDispatcher dispatcher;
+            request.setAttribute("logueado", "incorrecto");
+            dispatcher = request.getRequestDispatcher("ingresar");
+            dispatcher.forward(request, response);
+            return false;
+        } else {
+            return true;
+        }
+    }
 
     public void listarDocumentos(Usuario usuario) {
         proyectos = proyectoDao.listar(usuario.getIdUsuario());
@@ -307,8 +329,13 @@ public class Controlador extends HttpServlet {
         String nombreArchivo = "";
         Part archivoPart = request.getPart("archivo");
         nombreArchivo = request.getParameter("nombreArchivo");
-        
-        int archivoSize = (int) archivoPart.getSize(); 
+
+        ArchivoDao archivoDao = (ArchivoDao) this.fabrica.getArchivoDao();
+        Archivo arch = new Archivo();
+
+        arch.setNombre(nombreArchivo);
+
+        int archivoSize = (int) archivoPart.getSize();
         byte[] archivo = null; //el buffer
 
         if (archivoSize > 0) {
@@ -316,10 +343,34 @@ public class Controlador extends HttpServlet {
             try (DataInputStream dis = new DataInputStream(archivoPart.getInputStream())) {
                 dis.readFully(archivo);
                 String result = service.convertidorGlobal(archivo, nombreArchivo);
-                System.out.println(result);
+
+                arch.setText(result);
             }
         }
 
+        if (archivoDao.guardar(arch, Integer.parseInt(request.getParameter("idPaquete")))) {
+            request.setAttribute("creadoValido", "valido");
+        } else {
+            request.setAttribute("creadoValido", "invalido");
+        }
+        response.sendRedirect("ProyectosListar");
+
+    }
+
+    public String extraerContenido(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        ArchivoDao archivoDao = (ArchivoDao) this.fabrica.getArchivoDao();
+        int id = Integer.parseInt(request.getParameter("idArchivo"));
+        Archivo archivo = archivoDao.buscar(id);;
+        if (archivo != null) {
+            request.setAttribute("borradoValido", "valido");
+        } else {
+            request.setAttribute("borradoValido", "invalido");
+        }
+        request.setAttribute("tituloTexto", archivo.getNombre());
+        request.setAttribute("textoMostrar", archivo.getText());
+        return archivo.getText();
+        
     }
 
 }

@@ -29,6 +29,7 @@
         <url-pattern>/CrearProyecto</url-pattern>
         <url-pattern>/CrearPaquete</url-pattern>
         <url-pattern>/SubirArchivo</url-pattern>
+        <url-pattern>/MostrarTexto</url-pattern>
         <url-pattern>/Ingresar</url-pattern>
         <url-pattern>/CerrarSession</url-pattern>
         <url-pattern>/Registrar</url-pattern>
@@ -45,6 +46,14 @@
     <welcome-file-list>
         <welcome-file>Ingresar</welcome-file>
     </welcome-file-list>
+    <error-page>
+        <error-code>500</error-code>
+        <location>/WEB-INF/error.jsp</location>
+    </error-page>
+    <error-page>
+        <error-code>404</error-code>
+        <location>/WEB-INF/error.jsp</location>
+    </error-page>
     <jsp-config>
         <jsp-property-group>
             <description>Header y Footer</description>
