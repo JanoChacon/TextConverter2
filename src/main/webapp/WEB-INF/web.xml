@@ -32,6 +32,7 @@
         <url-pattern>/MostrarTexto</url-pattern>
         <url-pattern>/Ingresar</url-pattern>
         <url-pattern>/CerrarSession</url-pattern>
+        <url-pattern>/BorrarArchivo</url-pattern>
         <url-pattern>/Registrar</url-pattern>
         <url-pattern>/ProyectosListar</url-pattern>
         <url-pattern>/BorrarPaquete</url-pattern>

@@ -2,4 +2,6 @@
 <catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="system">
     <system systemId="http://localhost:8080/TextConWebService/ConversorService?wsdl" uri="wsdl/localhost_8080/TextConWebService/ConversorService.wsdl"/>
     <system systemId="http://localhost:8080/TextConWebService/ConversorService?xsd=1" uri="wsdl/localhost_8080/TextConWebService/ConversorService.xsd_1.xsd"/>
+    <system systemId="https://infinite-reaches-83909.herokuapp.com/?WSDL" uri="wsdl/infinite-reaches-83909.herokuapp.com/.wsdl"/>
+    <system systemId="https://infinite-reaches-83909.herokuapp.com/" uri="wsdl/infinite-reaches-83909.herokuapp.com/index"/>
 </catalog>

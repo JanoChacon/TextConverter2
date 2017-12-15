@@ -119,6 +119,10 @@ public class Controlador extends HttpServlet {
         if (ruta.equals("/SubirArchivo") && detectarLogin(request, response, session)) {
             subirArchivo(request, response);
         }
+        
+        if (ruta.equals("/BorrarArchivo") && detectarLogin(request, response, session)) {
+            borrarArchivo(request, response);
+        }
 
         if (ruta.equals("/MostrarTexto") && detectarLogin(request, response, session)) {
             extraerContenido(request, response);
@@ -363,14 +367,27 @@ public class Controlador extends HttpServlet {
         int id = Integer.parseInt(request.getParameter("idArchivo"));
         Archivo archivo = archivoDao.buscar(id);;
         if (archivo != null) {
-            request.setAttribute("borradoValido", "valido");
+            request.setAttribute("extraidoValido", "valido");
         } else {
-            request.setAttribute("borradoValido", "invalido");
+            request.setAttribute("extraidoValido", "invalido");
         }
         request.setAttribute("tituloTexto", archivo.getNombre());
         request.setAttribute("textoMostrar", archivo.getText());
         return archivo.getText();
         
+    }
+    
+        public void borrarArchivo(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        ArchivoDao archivoDao = (ArchivoDao) this.fabrica.getArchivoDao();
+
+        if (archivoDao.borrar(Integer.parseInt(request.getParameter("idArchivo")))) {
+            request.setAttribute("borradoValido", "valido");
+        } else {
+            request.setAttribute("borradoValido", "invalido");
+        }
+        response.sendRedirect("ProyectosListar");
+
     }
 
 }
